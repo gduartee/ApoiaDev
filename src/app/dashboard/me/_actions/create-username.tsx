@@ -1,5 +1,6 @@
 "use server"
 
+import { error } from "console";
 import { z } from "zod";
 
 const createUsernameSchema = z.object({
@@ -21,5 +22,8 @@ export async function createUsername(data: createUsernameFormData) {
 
     console.log(data.username)
 
-    return data.username
+    return{
+        data: "USERNAME CRIADO",
+        error: null
+    }
 }
