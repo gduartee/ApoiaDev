@@ -22,7 +22,7 @@ export default function UrlPreview() {
     return (
         <div className="flex items-center flex-1 p-2 text-gray-100">
             <form
-                className="flex flex-1 flex-col gap-4 items-start md:items-center md:flex-row"
+                className="flex flex-1 flex-col gap-4 items-center md:flex-row"
                 action={submitAction}
             >
                 <div className="flex items-center justify-center w-full">
