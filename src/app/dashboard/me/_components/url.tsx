@@ -2,9 +2,15 @@
 import { Button } from "@/components/ui/button";
 import { createUsername } from "../_actions/create-username";
 import { use, useState } from "react";
+import Link from "next/link";
 
-export default function UrlPreview() {
+interface UrlPreviewProps {
+    username: string | null;
+}
+
+export default function UrlPreview({ username: slug }: UrlPreviewProps) {
     const [error, setError] = useState<string | null>(null);
+    const [username, setUsername] = useState(slug)
     async function submitAction(formData: FormData) {
         const username = formData.get("username") as string;
 
@@ -16,7 +22,26 @@ export default function UrlPreview() {
 
         if (response.error) {
             setError(response.error);
+            return;
         }
+
+        if (response.data) {
+            setUsername(response.data);
+        }
+
+    }
+
+    if (!!username) {
+        return (
+            <div className="flex items-center flex-1 p-2 text-gray-100">
+
+                <div className="flex items-center justify-center w-full">
+                    <Link href={`${process.env.NEXT_PUBLIC_HOST_URL}/creator/${username}`}>
+                        {process.env.NEXT_PUBLIC_HOST_URL}/creator/{username}
+                    </Link>
+                </div>
+            </div>
+        )
     }
 
     return (

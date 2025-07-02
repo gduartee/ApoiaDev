@@ -3,6 +3,7 @@
 import { auth } from "@/lib/auth";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { createSlug } from "@/utils/create-slug";
 
 const createUsernameSchema = z.object({
     username: z.string({ message: "O username é obrigatório" }).min(4, "O username precisa ter no mínimo 4 caracteres")
@@ -33,17 +34,32 @@ export async function createUsername(data: createUsernameFormData) {
     try {
         const userId = session.user.id;
 
+        const slug = createSlug(data.username);
+
+        const existingSlug = await prisma.user.findUnique({
+            where: {
+                username: slug
+            }
+        })
+
+        if(existingSlug){
+            return{
+                data: null,
+                error: "Esse username já está em uso"
+            }
+        }
+
         await prisma.user.update({
             where: {
                 id: userId
             },
             data: {
-                username: data.username
+                username: slug
             }
         })
 
-        return{
-            data: "Username criado com sucesso",
+        return {
+            data: slug,
             error: null
         }
     } catch (error) {
